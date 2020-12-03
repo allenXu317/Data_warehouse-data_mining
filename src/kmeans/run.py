@@ -7,6 +7,8 @@ from time import sleep
 # 测试数据集为4维数据集
 # 但是还没进行验证
 
+#增加一行
+
 def mkdir(path):
 
     folder = os.path.exists(path)
@@ -163,9 +165,6 @@ def getMin(arr):
         i += 1
     return loc
 
-
-
-            
 
 def myKmeas(k=0,datas=[]):
 
