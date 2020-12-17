@@ -2,6 +2,7 @@ import csv
 import os
 import random
 from time import sleep
+import pandas as pd
 
 # 实现 最原始版本的 kmeans 算法，可用于多维数据集计算
 # 测试数据集为4维数据集
@@ -166,6 +167,58 @@ def getMin(arr):
     return loc
 
 
+# 计算平均值:
+def getMean(arr):
+    sum_t += 0
+    for a in arr:
+        sum_t += a
+    return sum_t/len(arr)
+
+
+
+# 进行zScore标准化
+def zScore(datas=[]):
+    # 项目均值
+    means = []
+    # 项目方差
+    variances = []
+    # 每个data标准化后的值
+    # z_data = []
+    # 所有data的集合
+    z_datas=[]
+    # 每个项目的长度
+    y = len(datas)
+    # 项目数
+    x = len(datas[0])
+    means = [0 for i in range(x)]
+    variances = [0 for i in range(x)]
+    # sum_mean = 0
+    for i in range(y):
+        for j in range(x):
+            means[j] += datas[i][j]
+    # 计算平均值
+    for i in range(x):
+        means[i] /= y
+    # 计算方差
+    sum_v = 0
+    for i in range(y):
+        for j in range(x):
+            variances[j] += (datas[i][j]-means[j])*(datas[i][j]-means[j])
+    for i in range(x):
+        variances[i] /= (y-1)
+        variances[i] **= 0.5 
+    # print(means)
+    # print(variances)
+    
+    # 计算z-score：
+    for i in range(y):
+        z_data = [0 for i in range(x)]
+        for j in range(x):  
+            z_data[j] = (datas[i][j] - means[j]) / variances[j]
+        z_datas.append(z_data)
+    return z_datas
+
+
 def myKmeas(k=0,datas=[]):
 
     MAX_LOOP = 100
@@ -245,10 +298,27 @@ pathSrc = "../dwDatas.txt"
 pathDst = "../datas.csv"
 
 types = getCsv(pathSrc,pathDst)
-datas = getDatas(pathDst,types)
+datas_t = getDatas(pathDst,types)
+datas = []
+for data in datas_t:
+    datas.append(data[:-1])
 print(datas)
-k = 10
+
+# 对数据进行标准化
+# z-score 标准化
+datas = zScore(datas)
+print(datas)
+k = 30
+# kmeans计算
 myKmeas(k,datas)
+
+
+# arr = [
+#     [1,2,3],
+#     [4,5,6]
+# ]
+# zScore(arr)
+
 
 
 # 欧氏距离测试:
